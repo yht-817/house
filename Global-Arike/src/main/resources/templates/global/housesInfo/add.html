@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-housesInfo-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">楼盘名字：</label>
+            <div class="col-sm-8">
+                <input id="housesName" name="housesName" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">楼盘类型：</label>
+            <div class="col-sm-8">
+                <select id="housesGenre" name="housesGenre" class="form-control m-b">
+
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">楼盘单价：</label>
+            <div class="col-sm-8">
+                <input id="housesPrice" name="housesPrice" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">建造时间：</label>
+            <div class="col-sm-8">
+                <input id="housesBuildDate" name="housesBuildDate" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">国家：</label>
+            <div class="col-sm-8">
+                <select id="country" name="country" class="form-control m-b" onclick="choose_country()">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">城市：</label>
+            <div class="col-sm-8">
+                <select id="city" name="city" class="form-control m-b">
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">详细地址：</label>
+            <div class="col-sm-8">
+                <input id="housesAddress" name="housesAddress" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">房屋产权：</label>
+            <div class="col-sm-8">
+                <select id="housesEquity" name="housesEquity" class="form-control m-b">
+                    <option value="40年">40年</option>
+                    <option value="70年">70年</option>
+                    <option value="99年">99年</option>
+                    <option value="永久产权">永久产权</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">交房时间：</label>
+            <div class="col-sm-8">
+                <input id="housesDelivery" name="housesDelivery" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">选择开发商：</label>
+            <div class="col-sm-8">
+                <select id="houseDevelopersNo" name="houseDevelopersNo" class="form-control m-b">
+
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">房源描述：</label>
+            <div class="col-sm-8">
+                <textarea id="housesDescribe" name="housesDescribe" class="form-control" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">封面图片：</label>
+            <div class="col-sm-8">
+                <input id="housesCoverImg" name="housesCoverImg" class="form-control" type="hidden">
+                <input type="file" accept="image/*" onchange="c(this)">
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+    var prefix = ctx + "global/housesInfo"
+    $("#form-housesInfo-add").validate({
+        rules: {
+            xxxx: {
+                required: true,
+            },
+        }
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-housesInfo-add').serialize());
+        }
+    }
+
+
+    laydate.render({
+        elem: '#housesDelivery'
+        , type: 'month'
+    });
+
+    laydate.render({
+        elem: '#housesBuildDate'
+        , type: 'year'
+    });
+
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: ctx + 'global/houseDevelopersInfo/lists',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                var html = '';
+                for (var i = 0; i < data.rows.length; i++) {
+                    html += '<option value="' + data.rows[i].houseDevelopersNo + '">' + data.rows[i].houseDevelopersName + '</option>';
+                }
+                $("#houseDevelopersNo").append(html)
+            }
+        });
+    });
+
+    $(function () {
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: ctx + 'global/housesType/lists',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                var html = '';
+                for (var i = 0; i < data.rows.length; i++) {
+                    html += '<option value="' + data.rows[i].typeNo + '">' + data.rows[i].housingType + '</option>';
+                }
+                $("#housesGenre").append(html)
+            }
+        });
+    });
+
+    // 城市选择
+    var cityArray;
+    var areaArray;
+    $(function () {
+        cityArray = new Array();
+        areaArray = new Array();
+        $.ajax({
+            type: 'GET',
+            async: false,
+            url: ctx + 'v1/home/findCity',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                var html = '';
+                var htmlc = '';
+                for (var i = 0; i < data.data.length; i++) {
+                    html += '<option value="' + data.data[i].scopeOneName + '">' + data.data[i].scopeOneName + '</option>';
+                    cityArray.push(data.data[i].scopeOneName)
+                    areaArray.push(data.data[i].childrens)
+                }
+                for (var j = 0; j < data.data[0].childrens.length; j++) {
+                    htmlc += '<option value="' + data.data[0].childrens[j].scopeTwoName + '">' + data.data[0].childrens[j].scopeTwoName + '</option>';
+                }
+                $("#country").append(html)
+                $("#city").append(htmlc)
+            }
+        });
+    });
+
+    // 选择城市二级联动
+
+    function choose_country() {
+        $("#city").html("");
+        var htmlc = '';
+        var country = $("#country").val();
+        for (var i = 0; i < cityArray.length; i++) {
+            if (cityArray[i] == country) {
+                for (var j = 0; j < areaArray[i].length; j++) {
+                    htmlc += '<option value="' + areaArray[i][j].scopeTwoName + '">' + areaArray[i][j].scopeTwoName + '</option>';
+                }
+            }
+        }
+        $("#city").append(htmlc)
+    }
+
+
+    function c(v) {
+        var reader = new FileReader();
+        reader.onload = function (evt) {
+            $(v).after('<img style="width: 200px;height: 100px" src="' + evt.target.result + '" />');
+        }
+        reader.readAsDataURL(v.files[0]);
+        var file = v.files[0];//获取文件名
+        var formdata = new FormData();
+        formdata.append("img", file);
+        $.modal.loading("图片上传中");
+        $.ajax({
+            url: ctx + "v1/ftp/fileupload",
+            data: formdata,
+            type: "post",
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                if (result.code == 200) {
+                    $.modal.closeLoading();
+                    $.modal.msgSuccess("上传图片成功");
+                    // 把成功的链接填充到输入框内
+                    $("#housesCoverImg").val(result.url)
+                } else {
+                    $.modal.alertError("图片上传失败");
+                }
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

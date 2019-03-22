@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>全球有家管理系统</title>
+    <meta name="keywords" content="全球有家">
+    <link href="../static/css/bootstrap.min.css" th:href="@{css/bootstrap.min.css}" rel="stylesheet"/>
+    <link href="../static/css/font-awesome.min.css" th:href="@{css/font-awesome.min.css}" rel="stylesheet"/>
+    <link href="../static/css/style.css" th:href="@{css/style.css}" rel="stylesheet"/>
+    <link href="../static/css/login.min.css" th:href="@{css/login.min.css}" rel="stylesheet"/>
+    <link href="../static/ruoyi/css/ry-ui.css" th:href="@{/ruoyi/css/ry-ui.css?v=3.2.0}" rel="stylesheet"/>
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html"/>
+    <![endif]-->
+    <link rel="shortcut icon" href="../static/favicon.ico" th:href="@{favicon.ico}"/>
+    <style type="text/css">
+        label.error {
+            position: inherit;
+        }
+
+        .code_but {
+            height: 34px;
+            background-color: cornflowerblue;
+            border: 0px;
+        }
+    </style>
+    <script>
+        if (window.top !== window.self) {
+            window.top.location = window.location
+        }
+        ;
+    </script>
+</head>
+
+<body class="signin">
+<div class="signinpanel">
+    <div class="row">
+        <div class="col-sm-6" style="margin: 0 auto; float: none;">
+            <form>
+                <h4 class="no-margins">注册：</h4>
+                <input type="text" id="username" name="username" class="form-control uname" autocomplete="off"
+                       placeholder="手机号"/>
+                <input type="password" name="password" class="form-control pword" autocomplete="off"
+                       onclick="queryPhone()" placeholder="密码"/>
+                <!--<div class="row m-t">-->
+                <!--<div class="col-xs-6">-->
+                <!--<input type="text" name="validateCode" class="form-control code" autocomplete="off"-->
+                <!--placeholder="验证码" maxlength="5">-->
+                <!--</div>-->
+                <!--<div class="col-xs-6">-->
+                <!--<button class="code_but" id="code_but" name="code_but">获取验证码</button>-->
+                <!--</div>-->
+                <!--</div>-->
+                <button class="btn btn-success btn-block" data-loading="正在注册，请稍后..." onclick="add()">注册</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript"> var ctx = [[@{
+    /}]]; var captchaType = [[${captchaType}]]; </script>
+<!-- 全局js -->
+<script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+<script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<!-- 验证插件 -->
+<script src="../static/ajax/libs/validate/jquery.validate.min.js"
+        th:src="@{/ajax/libs/validate/jquery.validate.min.js}"></script>
+<script src="../static/ajax/libs/validate/messages_zh.min.js"
+        th:src="@{/ajax/libs/validate/messages_zh.min.js}"></script>
+<script src="../static/ajax/libs/layer/layer.min.js" th:src="@{/ajax/libs/layer/layer.min.js}"></script>
+<script src="../static/ajax/libs/blockUI/jquery.blockUI.js" th:src="@{/ajax/libs/blockUI/jquery.blockUI.js}"></script>
+<script src="http://tajs.qq.com/stats?sId=62048022"></script>
+<script src="../static/ruoyi/js/ry-ui.js" th:src="@{/ruoyi/js/ry-ui.js?v=3.2.0}"></script>
+<script src="../static/ruoyi/login.js" th:src="@{/ruoyi/login.js}"></script>
+<script>
+    // 获取验证码倒计时
+    var countdown = 60;
+    $('#code_but').on('click', function () {
+        var obj = $("#code_but");
+        settime(obj);
+    })
+
+    function settime(obj) { //发送验证码倒计时
+        if (countdown == 0) {
+            obj.attr('disabled', false);
+            obj.html("获取验证码");
+            countdown = 60;
+            return;
+        } else {
+            obj.attr('disabled', true);
+            obj.html("重新发送(" + countdown + ")");
+            countdown--;
+        }
+        setTimeout(function () {
+            settime(obj)
+        }, 1000)
+    }
+
+    function queryPhone() {
+        var phoneno = $("#username").val();
+        $.ajax({
+                url: ctx + "userPhone",
+                type: "post",
+                data: {username: phoneno},
+                dataType: "json",
+                success: function (result) {
+                    console.log(result)
+                    if (result.code = 200) {
+                        if (result.data == false) {
+                            alert("当前手机号码没有在“全由之家”进行注册")
+                        }
+                    }
+                    else {
+                        alert("手机号码不能为空")
+                    }
+                }
+            }
+        )
+    }
+
+    // 进行注册
+    function add() {
+        var loginName = $("input[name='username']").val();
+        var password = $("input[name='password']").val();
+        // 权限ID
+        var roleIds = 4;
+        $.ajax({
+            cache: true,
+            type: "POST",
+            url: ctx + "system/user/register",
+            data: {
+                "loginName": loginName,
+                "password": password,
+                "roleIds": roleIds,
+            },
+            async: false,
+            error: function (request) {
+                $.modal.alertError("系统错误");
+            },
+            success: function (data) {
+                if (data.code = 200) {
+                    alert("注册成功")
+                    window.location.href = ctx + "login"
+                } else {
+                    alert("注册失败")
+                }
+            }
+        });
+    };
+
+
+</script>
+</body>
+</html>

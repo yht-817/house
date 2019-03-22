@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-serviceCity-edit" th:object="${serviceCity}">
+            <input id="scopeTwoNo" name="scopeTwoNo" th:field="*{scopeTwoNo}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">国家编码：</label>
+				<div class="col-sm-8">
+					<input id="scopeOneNo" name="scopeOneNo" th:field="*{scopeOneNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">城市名：</label>
+				<div class="col-sm-8">
+					<input id="scopeTwoName" name="scopeTwoName" th:field="*{scopeTwoName}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "global/serviceCity";
+		$("#form-serviceCity-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-serviceCity-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

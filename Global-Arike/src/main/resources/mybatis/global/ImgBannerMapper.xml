@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.imgBanner.mapper.ImgBannerMapper">
+    
+    <resultMap type="ImgBanner" id="ImgBannerResult">
+        <result property="id"    column="id"    />
+        <result property="imgPath"    column="img_path"    />
+        <result property="imgHide"    column="img_hide"    />
+    </resultMap>
+	
+	<sql id="selectImgBannerVo">
+        select id, img_path, img_hide from global_img_banner
+    </sql>
+	
+    <select id="selectImgBannerList" parameterType="ImgBanner" resultMap="ImgBannerResult">
+        <include refid="selectImgBannerVo"/>
+        <where>  
+            <if test="id != null  and id != '' "> and id = #{id}</if>
+             <if test="imgPath != null  and imgPath != '' "> and img_path = #{imgPath}</if>
+             <if test="imgHide != null "> and img_hide = #{imgHide}</if>
+         </where>
+    </select>
+    
+    <select id="selectImgBannerById" parameterType="String" resultMap="ImgBannerResult">
+        <include refid="selectImgBannerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertImgBanner" parameterType="ImgBanner">
+        insert into global_img_banner
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  and id != ''  ">id,</if>
+			<if test="imgPath != null  and imgPath != ''  ">img_path,</if>
+			<if test="imgHide != null  ">img_hide,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  and id != ''  ">#{id},</if>
+			<if test="imgPath != null  and imgPath != ''  ">#{imgPath},</if>
+			<if test="imgHide != null  ">#{imgHide},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateImgBanner" parameterType="ImgBanner">
+        update global_img_banner
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="imgPath != null  and imgPath != ''  ">img_path = #{imgPath},</if>
+            <if test="imgHide != null  ">img_hide = #{imgHide},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteImgBannerById" parameterType="String">
+        delete from global_img_banner where id = #{id}
+    </delete>
+	
+    <delete id="deleteImgBannerByIds" parameterType="String">
+        delete from global_img_banner where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

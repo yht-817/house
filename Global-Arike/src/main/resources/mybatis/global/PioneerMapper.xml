@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.pioneer.mapper.PioneerMapper">
+    
+    <resultMap type="Pioneer" id="PioneerResult">
+        <result property="id"    column="id"    />
+        <result property="userNo"    column="user_no"    />
+        <result property="phoneNo"    column="phone_no"    />
+        <result property="emailNo"    column="email_no"    />
+        <result property="userName"    column="user_name"    />
+        <result property="userHead"    column="user_head"    />
+        <result property="live"    column="live"    />
+        <result property="introduce"    column="introduce"    />
+        <result property="hide"    column="hide"    />
+        <result property="time"    column="time"    />
+    </resultMap>
+	
+	<sql id="selectPioneerVo">
+        select id, user_no, phone_no, email_no, user_name, user_head, live, introduce, hide, time from global_pioneer
+    </sql>
+	
+    <select id="selectPioneerList" parameterType="Pioneer" resultMap="PioneerResult">
+        <include refid="selectPioneerVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="userNo != null  and userNo != '' "> and user_no = #{userNo}</if>
+             <if test="phoneNo != null  and phoneNo != '' "> and phone_no = #{phoneNo}</if>
+             <if test="emailNo != null  and emailNo != '' "> and email_no = #{emailNo}</if>
+             <if test="userName != null  and userName != '' "> and user_name = #{userName}</if>
+             <if test="userHead != null  and userHead != '' "> and user_head = #{userHead}</if>
+             <if test="live != null  and live != '' "> and live = #{live}</if>
+             <if test="introduce != null  and introduce != '' "> and introduce = #{introduce}</if>
+             <if test="hide != null "> and hide = #{hide}</if>
+             <if test="time != null "> and time = #{time}</if>
+         </where>
+    </select>
+    
+    <select id="selectPioneerById" parameterType="Integer" resultMap="PioneerResult">
+        <include refid="selectPioneerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPioneer" parameterType="Pioneer" useGeneratedKeys="true" keyProperty="id">
+        insert into global_pioneer
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userNo != null  and userNo != ''  ">user_no,</if>
+			<if test="phoneNo != null  and phoneNo != ''  ">phone_no,</if>
+			<if test="emailNo != null  and emailNo != ''  ">email_no,</if>
+			<if test="userName != null  and userName != ''  ">user_name,</if>
+			<if test="userHead != null  and userHead != ''  ">user_head,</if>
+			<if test="live != null  and live != ''  ">live,</if>
+			<if test="introduce != null  and introduce != ''  ">introduce,</if>
+			<if test="hide != null  ">hide,</if>
+			<if test="time != null  ">time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userNo != null  and userNo != ''  ">#{userNo},</if>
+			<if test="phoneNo != null  and phoneNo != ''  ">#{phoneNo},</if>
+			<if test="emailNo != null  and emailNo != ''  ">#{emailNo},</if>
+			<if test="userName != null  and userName != ''  ">#{userName},</if>
+			<if test="userHead != null  and userHead != ''  ">#{userHead},</if>
+			<if test="live != null  and live != ''  ">#{live},</if>
+			<if test="introduce != null  and introduce != ''  ">#{introduce},</if>
+			<if test="hide != null  ">#{hide},</if>
+			<if test="time != null  ">#{time},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updatePioneer" parameterType="Pioneer">
+        update global_pioneer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userNo != null  and userNo != ''  ">user_no = #{userNo},</if>
+            <if test="phoneNo != null  and phoneNo != ''  ">phone_no = #{phoneNo},</if>
+            <if test="emailNo != null  and emailNo != ''  ">email_no = #{emailNo},</if>
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="userHead != null  and userHead != ''  ">user_head = #{userHead},</if>
+            <if test="live != null  and live != ''  ">live = #{live},</if>
+            <if test="introduce != null  and introduce != ''  ">introduce = #{introduce},</if>
+            <if test="hide != null  ">hide = #{hide},</if>
+            <if test="time != null  ">time = #{time},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deletePioneerById" parameterType="Integer">
+        delete from global_pioneer where id = #{id}
+    </delete>
+	
+    <delete id="deletePioneerByIds" parameterType="String">
+        delete from global_pioneer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.userInfo.mapper.UserInfoMapper">
+    
+    <resultMap type="UserInfo" id="UserInfoResult">
+        <result property="userNo"    column="user_no"    />
+        <result property="userHead"    column="user_head"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="sexNo"    column="sex_no"    />
+        <result property="phoneNo"    column="phone_no"    />
+        <result property="phoneCode"    column="phone_code"    />
+        <result property="mailboxNo"    column="mailbox_no"    />
+        <result property="password"    column="password"    />
+        <result property="regionDate"    column="region_date"    />
+        <result property="lastLoginDate"    column="last_login_date"    />
+        <result property="userState"    column="user_state"    />
+        <result property="userGrade"    column="user_grade"    />
+        <result property="userGradeChangeDate"    column="user_grade_change_date"    />
+        <result property="userSign"    column="user_sign"    />
+        <result property="userLocal"    column="user_local"    />
+    </resultMap>
+	
+	<sql id="selectUserInfoVo">
+        select user_no, user_head, nick_name, sex_no, phone_no, phone_code, mailbox_no, password, region_date, last_login_date, user_state, user_grade, user_grade_change_date, user_sign, user_local from global_user_info
+    </sql>
+	
+    <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        <where>  
+            <if test="userNo != null  and userNo != '' "> and user_no = #{userNo}</if>
+             <if test="userHead != null  and userHead != '' "> and user_head = #{userHead}</if>
+             <if test="nickName != null  and nickName != '' "> and nick_name = #{nickName}</if>
+             <if test="sexNo != null  and sexNo != '' "> and sex_no = #{sexNo}</if>
+             <if test="phoneNo != null  and phoneNo != '' "> and phone_no = #{phoneNo}</if>
+             <if test="phoneCode != null  and phoneCode != '' "> and phone_code = #{phoneCode}</if>
+             <if test="mailboxNo != null  and mailboxNo != '' "> and mailbox_no = #{mailboxNo}</if>
+             <if test="password != null  and password != '' "> and password = #{password}</if>
+             <if test="regionDate != null "> and region_date = #{regionDate}</if>
+             <if test="lastLoginDate != null "> and last_login_date = #{lastLoginDate}</if>
+             <if test="userState != null  and userState != '' "> and user_state = #{userState}</if>
+             <if test="userGrade != null  and userGrade != '' "> and user_grade = #{userGrade}</if>
+             <if test="userGradeChangeDate != null "> and user_grade_change_date = #{userGradeChangeDate}</if>
+             <if test="userSign != null  and userSign != '' "> and user_sign = #{userSign}</if>
+             <if test="userLocal != null  and userLocal != '' "> and user_local = #{userLocal}</if>
+         </where>
+    </select>
+    
+    <select id="selectUserInfoById" parameterType="String" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where user_no = #{userNo}
+    </select>
+        
+    <insert id="insertUserInfo" parameterType="UserInfo">
+        insert into global_user_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userNo != null  and userNo != ''  ">user_no,</if>
+			<if test="userHead != null  and userHead != ''  ">user_head,</if>
+			<if test="nickName != null  and nickName != ''  ">nick_name,</if>
+			<if test="sexNo != null  and sexNo != ''  ">sex_no,</if>
+			<if test="phoneNo != null  and phoneNo != ''  ">phone_no,</if>
+			<if test="phoneCode != null  and phoneCode != ''  ">phone_code,</if>
+			<if test="mailboxNo != null  and mailboxNo != ''  ">mailbox_no,</if>
+			<if test="password != null  and password != ''  ">password,</if>
+			<if test="regionDate != null  ">region_date,</if>
+			<if test="lastLoginDate != null  ">last_login_date,</if>
+			<if test="userState != null  and userState != ''  ">user_state,</if>
+			<if test="userGrade != null  and userGrade != ''  ">user_grade,</if>
+			<if test="userGradeChangeDate != null  ">user_grade_change_date,</if>
+			<if test="userSign != null  and userSign != ''  ">user_sign,</if>
+			<if test="userLocal != null  and userLocal != ''  ">user_local,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userNo != null  and userNo != ''  ">#{userNo},</if>
+			<if test="userHead != null  and userHead != ''  ">#{userHead},</if>
+			<if test="nickName != null  and nickName != ''  ">#{nickName},</if>
+			<if test="sexNo != null  and sexNo != ''  ">#{sexNo},</if>
+			<if test="phoneNo != null  and phoneNo != ''  ">#{phoneNo},</if>
+			<if test="phoneCode != null  and phoneCode != ''  ">#{phoneCode},</if>
+			<if test="mailboxNo != null  and mailboxNo != ''  ">#{mailboxNo},</if>
+			<if test="password != null  and password != ''  ">#{password},</if>
+			<if test="regionDate != null  ">#{regionDate},</if>
+			<if test="lastLoginDate != null  ">#{lastLoginDate},</if>
+			<if test="userState != null  and userState != ''  ">#{userState},</if>
+			<if test="userGrade != null  and userGrade != ''  ">#{userGrade},</if>
+			<if test="userGradeChangeDate != null  ">#{userGradeChangeDate},</if>
+			<if test="userSign != null  and userSign != ''  ">#{userSign},</if>
+			<if test="userLocal != null  and userLocal != ''  ">#{userLocal},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserInfo" parameterType="UserInfo">
+        update global_user_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userHead != null  and userHead != ''  ">user_head = #{userHead},</if>
+            <if test="nickName != null  and nickName != ''  ">nick_name = #{nickName},</if>
+            <if test="sexNo != null  and sexNo != ''  ">sex_no = #{sexNo},</if>
+            <if test="phoneNo != null  and phoneNo != ''  ">phone_no = #{phoneNo},</if>
+            <if test="phoneCode != null  and phoneCode != ''  ">phone_code = #{phoneCode},</if>
+            <if test="mailboxNo != null  and mailboxNo != ''  ">mailbox_no = #{mailboxNo},</if>
+            <if test="password != null  and password != ''  ">password = #{password},</if>
+            <if test="regionDate != null  ">region_date = #{regionDate},</if>
+            <if test="lastLoginDate != null  ">last_login_date = #{lastLoginDate},</if>
+            <if test="userState != null  and userState != ''  ">user_state = #{userState},</if>
+            <if test="userGrade != null  and userGrade != ''  ">user_grade = #{userGrade},</if>
+            <if test="userGradeChangeDate != null  ">user_grade_change_date = #{userGradeChangeDate},</if>
+            <if test="userSign != null  and userSign != ''  ">user_sign = #{userSign},</if>
+            <if test="userLocal != null  and userLocal != ''  ">user_local = #{userLocal},</if>
+        </trim>
+        where user_no = #{userNo}
+    </update>
+
+	<delete id="deleteUserInfoById" parameterType="String">
+        delete from global_user_info where user_no = #{userNo}
+    </delete>
+	
+    <delete id="deleteUserInfoByIds" parameterType="String">
+        delete from global_user_info where user_no in 
+        <foreach item="userNo" collection="array" open="(" separator="," close=")">
+            #{userNo}
+        </foreach>
+    </delete>
+    
+</mapper>

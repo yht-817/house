@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.housesInfo.mapper.HousesInfoMapper">
+    
+    <resultMap type="HousesInfo" id="HousesInfoResult">
+        <result property="id"    column="id"    />
+        <result property="userNo"    column="user_no"    />
+        <result property="housesName"    column="houses_name"    />
+        <result property="housesGenre"    column="houses_genre"    />
+        <result property="housesPrice"    column="houses_price"    />
+        <result property="country"    column="country"    />
+        <result property="city"    column="city"    />
+        <result property="lat"    column="lat"    />
+        <result property="log"    column="log"    />
+        <result property="housesPriceType"    column="houses_price_type"    />
+        <result property="housesBuildDate"    column="houses_build_date"    />
+        <result property="housesCode"    column="houses_code"    />
+        <result property="housesAddress"    column="houses_address"    />
+        <result property="housesEquity"    column="houses_equity"    />
+        <result property="housesDelivery"    column="houses_delivery"    />
+        <result property="housesCoverImg"    column="houses_cover_img"    />
+        <result property="housesDescribe"    column="houses_describe"    />
+        <result property="houseDevelopersNo"    column="house_developers_no"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+	
+	<sql id="selectHousesInfoVo">
+        select id, user_no, houses_name, houses_genre, houses_price, country, city, lat, log, houses_price_type, houses_build_date, houses_code, houses_address, houses_equity, houses_delivery, houses_cover_img, houses_describe, house_developers_no, create_time from global_houses_info
+    </sql>
+	
+    <select id="selectHousesInfoList" parameterType="HousesInfo" resultMap="HousesInfoResult">
+        <include refid="selectHousesInfoVo"/>
+        <where>  
+            <if test="id != null  and id != '' "> and id = #{id}</if>
+             <if test="userNo != null  and userNo != '' "> and user_no = #{userNo}</if>
+             <if test="housesName != null  and housesName != '' "> and houses_name = #{housesName}</if>
+             <if test="housesGenre != null  and housesGenre != '' "> and houses_genre = #{housesGenre}</if>
+             <if test="housesPrice != null "> and houses_price = #{housesPrice}</if>
+             <if test="country != null  and country != '' "> and country = #{country}</if>
+             <if test="city != null  and city != '' "> and city = #{city}</if>
+             <if test="lat != null "> and lat = #{lat}</if>
+             <if test="log != null "> and log = #{log}</if>
+             <if test="housesPriceType != null  and housesPriceType != '' "> and houses_price_type = #{housesPriceType}</if>
+             <if test="housesBuildDate != null  and housesBuildDate != '' "> and houses_build_date = #{housesBuildDate}</if>
+             <if test="housesCode != null  and housesCode != '' "> and houses_code = #{housesCode}</if>
+             <if test="housesAddress != null  and housesAddress != '' "> and houses_address = #{housesAddress}</if>
+             <if test="housesEquity != null  and housesEquity != '' "> and houses_equity = #{housesEquity}</if>
+             <if test="housesDelivery != null  and housesDelivery != '' "> and houses_delivery = #{housesDelivery}</if>
+             <if test="housesCoverImg != null  and housesCoverImg != '' "> and houses_cover_img = #{housesCoverImg}</if>
+             <if test="housesDescribe != null  and housesDescribe != '' "> and houses_describe = #{housesDescribe}</if>
+             <if test="houseDevelopersNo != null  and houseDevelopersNo != '' "> and house_developers_no = #{houseDevelopersNo}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectHousesInfoById" parameterType="String" resultMap="HousesInfoResult">
+        <include refid="selectHousesInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHousesInfo" parameterType="HousesInfo">
+        insert into global_houses_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  and id != ''  ">id,</if>
+			<if test="userNo != null  and userNo != ''  ">user_no,</if>
+			<if test="housesName != null  and housesName != ''  ">houses_name,</if>
+			<if test="housesGenre != null  and housesGenre != ''  ">houses_genre,</if>
+			<if test="housesPrice != null  ">houses_price,</if>
+			<if test="country != null  and country != ''  ">country,</if>
+			<if test="city != null  and city != ''  ">city,</if>
+			<if test="lat != null  ">lat,</if>
+			<if test="log != null  ">log,</if>
+			<if test="housesPriceType != null  and housesPriceType != ''  ">houses_price_type,</if>
+			<if test="housesBuildDate != null  and housesBuildDate != ''  ">houses_build_date,</if>
+			<if test="housesCode != null  and housesCode != ''  ">houses_code,</if>
+			<if test="housesAddress != null  and housesAddress != ''  ">houses_address,</if>
+			<if test="housesEquity != null  and housesEquity != ''  ">houses_equity,</if>
+			<if test="housesDelivery != null  and housesDelivery != ''  ">houses_delivery,</if>
+			<if test="housesCoverImg != null  and housesCoverImg != ''  ">houses_cover_img,</if>
+			<if test="housesDescribe != null  and housesDescribe != ''  ">houses_describe,</if>
+			<if test="houseDevelopersNo != null  and houseDevelopersNo != ''  ">house_developers_no,</if>
+			<if test="createTime != null  ">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  and id != ''  ">#{id},</if>
+			<if test="userNo != null  and userNo != ''  ">#{userNo},</if>
+			<if test="housesName != null  and housesName != ''  ">#{housesName},</if>
+			<if test="housesGenre != null  and housesGenre != ''  ">#{housesGenre},</if>
+			<if test="housesPrice != null  ">#{housesPrice},</if>
+			<if test="country != null  and country != ''  ">#{country},</if>
+			<if test="city != null  and city != ''  ">#{city},</if>
+			<if test="lat != null  ">#{lat},</if>
+			<if test="log != null  ">#{log},</if>
+			<if test="housesPriceType != null  and housesPriceType != ''  ">#{housesPriceType},</if>
+			<if test="housesBuildDate != null  and housesBuildDate != ''  ">#{housesBuildDate},</if>
+			<if test="housesCode != null  and housesCode != ''  ">#{housesCode},</if>
+			<if test="housesAddress != null  and housesAddress != ''  ">#{housesAddress},</if>
+			<if test="housesEquity != null  and housesEquity != ''  ">#{housesEquity},</if>
+			<if test="housesDelivery != null  and housesDelivery != ''  ">#{housesDelivery},</if>
+			<if test="housesCoverImg != null  and housesCoverImg != ''  ">#{housesCoverImg},</if>
+			<if test="housesDescribe != null  and housesDescribe != ''  ">#{housesDescribe},</if>
+			<if test="houseDevelopersNo != null  and houseDevelopersNo != ''  ">#{houseDevelopersNo},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHousesInfo" parameterType="HousesInfo">
+        update global_houses_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userNo != null  and userNo != ''  ">user_no = #{userNo},</if>
+            <if test="housesName != null  and housesName != ''  ">houses_name = #{housesName},</if>
+            <if test="housesGenre != null  and housesGenre != ''  ">houses_genre = #{housesGenre},</if>
+            <if test="housesPrice != null  ">houses_price = #{housesPrice},</if>
+            <if test="country != null  and country != ''  ">country = #{country},</if>
+            <if test="city != null  and city != ''  ">city = #{city},</if>
+            <if test="lat != null  ">lat = #{lat},</if>
+            <if test="log != null  ">log = #{log},</if>
+            <if test="housesPriceType != null  and housesPriceType != ''  ">houses_price_type = #{housesPriceType},</if>
+            <if test="housesBuildDate != null  and housesBuildDate != ''  ">houses_build_date = #{housesBuildDate},</if>
+            <if test="housesCode != null  and housesCode != ''  ">houses_code = #{housesCode},</if>
+            <if test="housesAddress != null  and housesAddress != ''  ">houses_address = #{housesAddress},</if>
+            <if test="housesEquity != null  and housesEquity != ''  ">houses_equity = #{housesEquity},</if>
+            <if test="housesDelivery != null  and housesDelivery != ''  ">houses_delivery = #{housesDelivery},</if>
+            <if test="housesCoverImg != null  and housesCoverImg != ''  ">houses_cover_img = #{housesCoverImg},</if>
+            <if test="housesDescribe != null  and housesDescribe != ''  ">houses_describe = #{housesDescribe},</if>
+            <if test="houseDevelopersNo != null  and houseDevelopersNo != ''  ">house_developers_no = #{houseDevelopersNo},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHousesInfoById" parameterType="String">
+        delete from global_houses_info where id = #{id}
+    </delete>
+	
+    <delete id="deleteHousesInfoByIds" parameterType="String">
+        delete from global_houses_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

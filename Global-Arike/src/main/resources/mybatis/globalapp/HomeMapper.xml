@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.globalapp.main.mapper.HomeMapper">
+    <resultMap type="ImgBanners" id="ImgBannerResults">
+        <result property="id" column="id"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="imgHide" column="img_hide"/>
+    </resultMap>
+
+    <sql id="selectImgBannerVos">
+        select id, img_path, img_hide from global_img_banner
+    </sql>
+
+    <!--获取首页的banner图片-->
+    <select id="findHomeBanner" parameterType="String" resultMap="ImgBannerResults">
+        <include refid="selectImgBannerVos"/>
+        WHERE img_hide = 0 LIMIT 4
+    </select>
+
+    <!--获取国家一对多的结构-->
+    <resultMap type="com.ruoyi.project.globalapp.main.domain.Country" id="serviceCountry">
+        <result column="scope_one_no" property="scopeOneNo"/>
+        <result column="scope_one_name" property="scopeOneName"/>
+        <result column="scope_two_icon" property="scopeTwoIcon"/>
+        <collection property="childrens" ofType="com.ruoyi.project.globalapp.main.domain.City" column="serviceCity">
+            <result column="scope_two_no" property="scopeTwoNo"/>
+            <result column="scope_two_name" property="scopeTwoName"/>
+        </collection>
+    </resultMap>
+    <select id="findCity" parameterType="com.ruoyi.project.globalapp.main.domain.Country" resultMap="serviceCountry">
+          SELECT a.scope_one_no,a.scope_one_name,a.scope_two_icon,b.scope_two_no,b.scope_two_name FROM global_service_country a LEFT JOIN global_service_city b ON a.scope_one_no = b.scope_one_no
+    </select>
+
+    <!--插入当前预约的数据-->
+    <insert id="addSubscribeInfo" parameterType="SubscribeInfos">
+          insert into global_subscribe_info(houses_code,user_no,name,sex,phone_no,wx_no,email_no,note)
+          values (#{housesCode},#{userNo},#{name},#{sex},#{phoneNo},#{wxNo},#{emailNo},#{note})
+    </insert>
+
+    <!--国家电话号码区号获取-->
+    <resultMap type="CountryMobilePrefixOutput" id="CountryMobilePrefixOutputs">
+        <result property="zhName" column="zh_name"/>
+        <result property="code" column="code"/>
+        <result property="firstLetter" column="first_letter"/>
+        <result property="priority" column="priority"/>
+    </resultMap>
+
+    <select id="findPhoneCode" parameterType="com.ruoyi.project.globalapp.main.domain.CountryMobilePrefixOutput"
+            resultMap="CountryMobilePrefixOutputs">
+        select zh_name,code,first_letter,priority from global_international_code
+    </select>
+
+    <!--获取地产先锋的列表-->
+    <resultMap type="PioneerList" id="PioneerLists">
+        <result property="userNo" column="user_no"/>
+        <result property="phoneNo" column="phone_no"/>
+        <result property="userName" column="user_name"/>
+        <result property="userHead" column="user_head"/>
+        <result property="live" column="live"/>
+        <result property="introduce" column="introduce"/>
+    </resultMap>
+    <select id="queryPioneerList" parameterType="com.ruoyi.project.globalapp.main.domain.PioneerList"
+            resultMap="PioneerLists">
+        SELECT user_no,phone_no,user_name,user_head,live,introduce FROM global_pioneer WHERE 1=1
+        <if test="city != null  and city != ''">
+            and live = #{city}
+        </if>
+        LIMIT #{pageNo},#{pageSize}
+    </select>
+
+    <!--获取资讯列表-->
+    <resultMap type="InformationList" id="InformationLists">
+        <result property="informationNo" column="information_no"/>
+        <result property="userNo" column="user_no"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="userHead" column="user_head"/>
+        <result property="informationTitle" column="information_title"/>
+        <result property="informationBanner" column="information_banner"/>
+        <result property="discussNumber" column="discuss_number"/>
+        <result property="giveNumber" column="give_number"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+    <select id="queryInformationList" parameterType="com.ruoyi.project.globalapp.main.domain.InformationList"
+            resultMap="InformationLists">
+          SELECT a.information_no,a.user_no,a.information_title,a.information_banner,a.discuss_number,a.give_number,a.create_time,b.nick_name,b.user_head FROM global_information a
+          LEFT JOIN global_user_info b ON a.user_no = b.user_no LIMIT #{pageNo},#{pageSize}
+    </select>
+
+    <!--获取资讯评论列表-->
+    <resultMap type="GlobalComments" id="globalcomments">
+        <result property="userNo" column="user_no"/>
+        <result property="content" column="content"/>
+        <result property="commentNo" column="comment_no"/>
+        <result property="userHead" column="user_head"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="commentTime" column="comment_time"/>
+    </resultMap>
+
+    <select id="queryCommentsList" parameterType="com.ruoyi.project.globalapp.main.domain.GlobalComments"
+            resultMap="globalcomments">
+        SELECT * FROM (SELECT a.information_no, a.comment_no,a.user_no,a.content,a.comment_time,b.nick_name,b.user_head FROM global_comments a LEFT JOIN global_user_info b ON a.user_no = b.user_no LIMIT #{pageNo},#{pageSize}) AS aaa WHERE information_no = #{informationNo}
+    </select>
+
+
+    <!--修改房产经纪的信息-->
+    <update id="updatePioneer" parameterType="Pioneer">
+        update global_pioneer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phoneNo != null  and phoneNo != ''  ">phone_no = #{phoneNo},</if>
+            <if test="emailNo != null  and emailNo != ''  ">email_no = #{emailNo},</if>
+            <if test="userName != null  and userName != ''  ">user_name = #{userName},</if>
+            <if test="userHead != null  and userHead != ''  ">user_head = #{userHead},</if>
+            <if test="live != null  and live != ''  ">live = #{live},</if>
+            <if test="introduce != null  and introduce != ''  ">introduce = #{introduce},</if>
+            <if test="hide != null  ">hide = #{hide},</if>
+            <if test="time != null  ">time = #{time},</if>
+        </trim>
+        where user_no = #{userNo}
+    </update>
+
+
+    <!--查询我的房产经纪人-->
+    <select id="myFocusPioneer" parameterType="com.ruoyi.project.globalapp.main.domain.PioneerList"
+            resultMap="PioneerLists">
+        SELECT a.user_no,a.phone_no,a.user_name,a.user_head,a.live,a.introduce FROM global_pioneer a,global_pioneer_focus b WHERE a.user_no = b.focus_user_no AND b.user_no = #{userNo}
+    </select>
+
+</mapper>

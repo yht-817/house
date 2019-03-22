@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.globalapp.main.mapper.HouseMapper">
+
+    <!--条件查询当前新房列表-->
+    <select id="queryHouseInfo" resultType="map">
+        SELECT * FROM (SELECT
+        a.id,a.houses_name,a.houses_price,a.houses_price_type,a.country,city,a.houses_address,a.houses_cover_img,b.housing_type_e,b.housing_type,a.houses_code,a.create_time
+        FROM global_houses_info a LEFT JOIN global_houses_type b ON a.houses_genre = b.type_no) AS result
+        <if test="rank == 0">
+            GROUP BY houses_price
+        </if>
+        <if test="rank == 1">
+            GROUP BY houses_price DESC
+        </if>
+        <if test="rank == 2">
+            GROUP BY create_time DESC
+        </if>
+        LIMIT #{pageNo},#{pageSize}
+    </select>
+
+    <!--房屋类型列表查询-->
+    <select id="queryHomeType" resultType="map">
+        SELECT type_no,housing_type,housing_type_e FROM global_houses_type
+    </select>
+
+    <!--房屋基本信息查询-->
+    <select id="quereyhouseInfo" resultType="map">
+        SELECT a.id,a.houses_name,a.houses_price,a.houses_price_type,a.country,city,a.houses_address,a.houses_cover_img,a.houses_delivery,a.houses_equity,a.houses_describe,b.housing_type_e,b.housing_type,a.houses_code,a.house_developers_no,a.create_time
+        FROM global_houses_info a LEFT JOIN global_houses_type b ON a.houses_genre = b.type_no WHERE a.houses_code = #{homeCode}
+    </select>
+
+    <!--查询当前封面图片-->
+    <select id="quereyImgs" resultType="java.lang.String">
+        SELECT houses_img FROM global_houses_info_img WHERE houses_code = #{homeCode}
+    </select>
+
+    <!--查询当前户型的介绍-->
+    <select id="queryDoormodel" resultType="map">
+        SELECT houses_drawing_url,houses_drawing_name,houses_area,houses_bedroom_no,houses_bathroom_no,houses_unit_price FROM global_drawing_info WHERE houses_code = #{homeCode}
+    </select>
+
+    <resultMap type="Developers" id="HouseDevelopersInfoResult">
+        <result property="id" column="id"/>
+        <result property="houseDevelopersNo" column="house_developers_no"/>
+        <result property="houseDevelopersName" column="house_developers_name"/>
+        <result property="houseDevelopersLogo" column="house_developers_logo"/>
+        <result property="houseDevelopersIntroduce" column="house_developers_introduce"/>
+    </resultMap>
+
+    <select id="quereyDevelopers" parameterType="Developers" resultMap="HouseDevelopersInfoResult">
+        select id, house_developers_no, house_developers_name, house_developers_logo, house_developers_introduce from global_house_developers_info where house_developers_no = #{house_developers_no}
+    </select>
+
+    <select id="quereyFocus" resultType="map">
+        SELECT a.houses_code,a.id,a.houses_name,a.houses_price,a.houses_price_type,a.country,city,a.houses_address,a.houses_cover_img,b.housing_type_e,b.housing_type,a.houses_code,a.create_time
+                FROM global_houses_info a,global_houses_type b,global_collection_house c WHERE a.houses_genre = b.type_no AND a.houses_code = c.collection_no AND c.user_no = #{userNo} AND c.collection_house_type = #{collectionType}
+    </select>
+
+    <!--新房条件筛选查询-->
+    <select id="queryScreening" resultType="map">
+        SELECT
+        a.id,a.houses_name,a.houses_price,a.houses_price_type,a.country,city,a.houses_address,a.houses_cover_img,b.housing_type_e,b.housing_type,a.houses_code,a.create_time
+        FROM global_houses_info a,
+        global_houses_type b,
+        (SELECT distinct houses_code FROM global_drawing_info WHERE 1=1
+        <if test="startArea != 0">
+            AND houses_area &gt;= #{startArea}
+        </if>
+        <if test="endArea != 0">
+            AND houses_area &lt;= #{endArea}
+        </if>
+        <if test="bedroom != 0">
+            AND houses_bedroom_no &lt;= #{bedroom}
+        </if>
+        <if test="bathroom != 0">
+            AND houses_bathroom_no &lt;= #{bathroom}
+        </if>
+        ) c
+        WHERE a.houses_genre = b.type_no AND c.houses_code =a.houses_code
+        <if test="startPrice != 0">
+            AND a.houses_price &gt;= #{startPrice}
+        </if>
+        <if test="endPrice != 0">
+            AND a.houses_price &lt;= #{endPrice}
+        </if>
+        <if test="houseType != null and houseType != ''">
+            AND b.type_no = #{houseType}
+        </if>
+        <if test="rank == 0">
+            GROUP BY houses_price
+        </if>
+        <if test="rank == 1">
+            GROUP BY houses_price DESC
+        </if>
+        <if test="rank == 2">
+            GROUP BY create_time DESC
+        </if>
+        LIMIT #{pageNo},#{pageSize}
+    </select>
+
+    <!--查询当前房产经纪人的房屋信息-->
+    <select id="queryAgentHouse" resultType="map">
+        SELECT * FROM (SELECT a.id,a.user_no,a.houses_name,a.houses_price,a.houses_price_type,a.country,city,a.houses_address,a.houses_cover_img,b.housing_type_e,b.housing_type,a.houses_code,a.create_time
+        FROM global_houses_info a LEFT JOIN global_houses_type b ON a.houses_genre = b.type_no) AS result WHERE user_no = #{focusUserNo} GROUP BY create_time DESC
+    </select>
+
+</mapper>

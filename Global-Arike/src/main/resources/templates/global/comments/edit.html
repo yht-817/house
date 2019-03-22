@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-comments-edit" th:object="${comments}">
+            <input id="commentNo" name="commentNo" th:field="*{commentNo}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">资讯编码：</label>
+				<div class="col-sm-8">
+					<input id="informationNo" name="informationNo" th:field="*{informationNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">用户编码：</label>
+				<div class="col-sm-8">
+					<input id="userNo" name="userNo" th:field="*{userNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">评论内容：</label>
+				<div class="col-sm-8">
+					<input id="content" name="content" th:field="*{content}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">时间：</label>
+				<div class="col-sm-8">
+					<input id="commentTime" name="commentTime" th:field="*{commentTime}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "global/comments";
+		$("#form-comments-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-comments-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

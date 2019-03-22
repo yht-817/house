@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.serviceCity.mapper.ServiceCityMapper">
+    
+    <resultMap type="ServiceCity" id="ServiceCityResult">
+        <result property="scopeTwoNo"    column="scope_two_no"    />
+        <result property="scopeOneNo"    column="scope_one_no"    />
+        <result property="scopeTwoName"    column="scope_two_name"    />
+    </resultMap>
+	
+	<sql id="selectServiceCityVo">
+        select scope_two_no, scope_one_no, scope_two_name from global_service_city
+    </sql>
+	
+    <select id="selectServiceCityList" parameterType="ServiceCity" resultMap="ServiceCityResult">
+        <include refid="selectServiceCityVo"/>
+        <where>  
+            <if test="scopeTwoNo != null  and scopeTwoNo != '' "> and scope_two_no = #{scopeTwoNo}</if>
+             <if test="scopeOneNo != null  and scopeOneNo != '' "> and scope_one_no = #{scopeOneNo}</if>
+             <if test="scopeTwoName != null  and scopeTwoName != '' "> and scope_two_name = #{scopeTwoName}</if>
+         </where>
+    </select>
+    
+    <select id="selectServiceCityById" parameterType="String" resultMap="ServiceCityResult">
+        <include refid="selectServiceCityVo"/>
+        where scope_two_no = #{scopeTwoNo}
+    </select>
+        
+    <insert id="insertServiceCity" parameterType="ServiceCity">
+        insert into global_service_city
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="scopeTwoNo != null  and scopeTwoNo != ''  ">scope_two_no,</if>
+			<if test="scopeOneNo != null  and scopeOneNo != ''  ">scope_one_no,</if>
+			<if test="scopeTwoName != null  and scopeTwoName != ''  ">scope_two_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="scopeTwoNo != null  and scopeTwoNo != ''  ">#{scopeTwoNo},</if>
+			<if test="scopeOneNo != null  and scopeOneNo != ''  ">#{scopeOneNo},</if>
+			<if test="scopeTwoName != null  and scopeTwoName != ''  ">#{scopeTwoName},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateServiceCity" parameterType="ServiceCity">
+        update global_service_city
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scopeOneNo != null  and scopeOneNo != ''  ">scope_one_no = #{scopeOneNo},</if>
+            <if test="scopeTwoName != null  and scopeTwoName != ''  ">scope_two_name = #{scopeTwoName},</if>
+        </trim>
+        where scope_two_no = #{scopeTwoNo}
+    </update>
+
+	<delete id="deleteServiceCityById" parameterType="String">
+        delete from global_service_city where scope_two_no = #{scopeTwoNo}
+    </delete>
+	
+    <delete id="deleteServiceCityByIds" parameterType="String">
+        delete from global_service_city where scope_two_no in 
+        <foreach item="scopeTwoNo" collection="array" open="(" separator="," close=")">
+            #{scopeTwoNo}
+        </foreach>
+    </delete>
+    
+</mapper>

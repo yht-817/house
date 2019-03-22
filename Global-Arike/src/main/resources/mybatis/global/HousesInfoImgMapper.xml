@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.housesInfoImg.mapper.HousesInfoImgMapper">
+    
+    <resultMap type="HousesInfoImg" id="HousesInfoImgResult">
+        <result property="id"    column="id"    />
+        <result property="housesCode"    column="houses_code"    />
+        <result property="housesImg"    column="houses_img"    />
+        <result property="housesHide"    column="houses_hide"    />
+    </resultMap>
+	
+	<sql id="selectHousesInfoImgVo">
+        select id, houses_code, houses_img, houses_hide from global_houses_info_img
+    </sql>
+	
+    <select id="selectHousesInfoImgList" parameterType="HousesInfoImg" resultMap="HousesInfoImgResult">
+        <include refid="selectHousesInfoImgVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="housesCode != null  and housesCode != '' "> and houses_code = #{housesCode}</if>
+             <if test="housesImg != null  and housesImg != '' "> and houses_img = #{housesImg}</if>
+             <if test="housesHide != null "> and houses_hide = #{housesHide}</if>
+         </where>
+    </select>
+    
+    <select id="selectHousesInfoImgById" parameterType="Integer" resultMap="HousesInfoImgResult">
+        <include refid="selectHousesInfoImgVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHousesInfoImg" parameterType="HousesInfoImg" useGeneratedKeys="true" keyProperty="id">
+        insert into global_houses_info_img
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="housesCode != null  and housesCode != ''  ">houses_code,</if>
+			<if test="housesImg != null  and housesImg != ''  ">houses_img,</if>
+			<if test="housesHide != null  ">houses_hide,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="housesCode != null  and housesCode != ''  ">#{housesCode},</if>
+			<if test="housesImg != null  and housesImg != ''  ">#{housesImg},</if>
+			<if test="housesHide != null  ">#{housesHide},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHousesInfoImg" parameterType="HousesInfoImg">
+        update global_houses_info_img
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="housesCode != null  and housesCode != ''  ">houses_code = #{housesCode},</if>
+            <if test="housesImg != null  and housesImg != ''  ">houses_img = #{housesImg},</if>
+            <if test="housesHide != null  ">houses_hide = #{housesHide},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHousesInfoImgById" parameterType="Integer">
+        delete from global_houses_info_img where id = #{id}
+    </delete>
+	
+    <delete id="deleteHousesInfoImgByIds" parameterType="String">
+        delete from global_houses_info_img where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

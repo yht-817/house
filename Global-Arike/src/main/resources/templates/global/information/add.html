@@ -1,0 +1,153 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div th:include="include::footer"></div>
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-information-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">资讯标题：</label>
+            <div class="col-sm-8">
+                <input id="informationTitle" name="informationTitle" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">资讯模式：</label>
+            <div class="col-sm-8">
+                <select id="informationMode" name="informationMode" class="form-control m-b">
+                    <option value="10001">原创</option>
+                    <option value="10002">转载</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" style="display: none">
+            <label class="col-sm-3 control-label">资讯内容：</label>
+            <div class="col-sm-8">
+                <input id="informationContent" name="informationContent" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-group">
+            <!--节点-->
+            <div style="width: 100%;margin:  0 auto;">
+                <div class="top" style="border: 1px solid #dcdcdc;border-radius: 5px;margin-bottom: 10px">
+
+                </div>
+                <div class="bottomBtn"
+                     style="border: 1px solid #dcdcdc;border-radius: 5px;box-sizing: border-box;padding: 10px 0; text-align: center;font-weight: bolder;font-size: 25px;background-color: #0e9aef">
+                    +
+                </div>
+            </div>
+            <script>
+                var html = '',
+                    htmlI = '',
+                    i = 0;
+                html += '                    <div class="topCent" style="margin-bottom: 10px;box-sizing: border-box;padding: 10px;">\n' +
+                    '                        <div class="addImg" style="border: 1px solid #dcdcdc;border-radius: 5px;box-sizing: border-box;padding: 10px 0; text-align: center;position: relative">\n' +
+                    '                            <text class="" style="font-weight: bolder;font-size: 15px;display: block">图片添加</text>\n' +
+                    '                            <input type="file" style="opacity: 0;position: absolute;width: 100%;height: 100%;left: 0;top: 0"  onchange="c(this)"/>\n' +
+                    '                            <input type="text" class="addImgIpt' + i + '" style="display: none"/>\n' +
+                    '                        </div>\n' +
+                    '                        <div class="addText" style="margin-top: 10px;border: 1px solid #dcdcdc;border-radius: 5px;">\n' +
+                    '                            <textarea class="addTextCent addTextCent' + i + '" style="border: 0;width: 100%;height: 150px;outline: none;resize: none;margin-top: 3px"></textarea>\n' +
+                    '                        </div>\n' +
+                    '                    </div>';
+
+                $('.top').html(html);
+
+                $('.bottomBtn').on('click', function () {
+                    i++;
+                    htmlI += '                    <div class="topCent" style="margin-bottom: 10px;box-sizing: border-box;padding: 10px;">\n' +
+                        '                        <div class="addImg" style="border: 1px solid #dcdcdc;border-radius: 5px;box-sizing: border-box;padding: 10px 0; text-align: center;position: relative">\n' +
+                        '                            <text class="" style="font-weight: bolder;font-size: 15px;display: block">图片添加</text>\n' +
+                        '                            <input type="file" style="opacity: 0;position: absolute;width: 100%;height: 100%;left: 0;top: 0"  onchange="c(this)"/>\n' +
+                        '                            <input type="text" class="addImgIpt' + i + '" style="display: none"/>\n' +
+                        '                        </div>\n' +
+                        '                        <div class="addText" style="margin-top: 10px;border: 1px solid #dcdcdc;border-radius: 5px;">\n' +
+                        '                            <textarea class="addTextCent addTextCent' + i + '" style="border: 0;width: 100%;height: 150px;outline: none;resize: none;margin-top: 3px"></textarea>\n' +
+                        '                        </div>\n' +
+                        '                    </div>';
+                    $('.top').append(htmlI);
+                    htmlI = '';
+                })
+
+
+                function getData() {
+                    var data = [];
+                    var person = null;
+                    if (i == 0) {
+                        person = new Object();
+                        var imgval = $(".addImgIpt" + i).val();
+                        var contentval = $(".addTextCent" + i).val();
+                        person.img = imgval;
+                        person.content = contentval;
+                        data.push(person)
+                    } else {
+                        for (var j = 0; j < i + 1; j++) {
+                            person = new Object();
+                            // 获取当前数据
+                            var imgval = $(".addImgIpt" + j).val();
+                            var contentval = $(".addTextCent" + j).val();
+                            person.img = imgval;
+                            person.content = contentval;
+                            data.push(person)
+                        }
+                    }
+                    var json_str = JSON.stringify(data).toString();
+                    // 把数据结果赋值
+                    $("#informationContent").val(json_str)
+                }
+
+                // 文件上传
+                function c(v) {
+                    var reader = new FileReader();
+                    reader.onload = function (evt) {
+                        $(v).after('<img style="width: 200px;height: 100px" src="' + evt.target.result + '" />');
+                    }
+                    reader.readAsDataURL(v.files[0]);
+                    var file = v.files[0];//获取文件名
+                    var formdata = new FormData();
+                    formdata.append("img", file);
+                    $.modal.loading("图片上传中");
+                    $.ajax({
+                        url: ctx + "v1/ftp/fileupload",
+                        data: formdata,
+                        type: "post",
+                        processData: false,
+                        contentType: false,
+                        success: function (result) {
+                            if (result.code == 200) {
+                                $.modal.closeLoading();
+                                $.modal.msgSuccess("上传图片成功");
+                                // 把成功的链接填充到输入框内
+                                $(v).prev().hide();
+                                $(v).next().next().attr("value", result.url);
+                            } else {
+                                $.modal.alertError("图片上传失败");
+                            }
+                        }
+                    })
+                }
+            </script>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    var prefix = ctx + "global/information"
+    $("#form-information-add").validate({
+        rules: {
+            xxxx: {
+                required: true,
+            },
+        }
+    });
+
+    function submitHandler() {
+        getData();
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-information-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>

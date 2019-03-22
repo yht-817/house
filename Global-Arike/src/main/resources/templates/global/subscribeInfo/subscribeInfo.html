@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            房屋编码：<input type="text" name="housesCode"/>
+                        </li>
+
+                        <li>
+                            用户姓名：<input type="text" name="name"/>
+                        </li>
+
+                        <li>
+                            电话号码：<input type="text" name="phoneNo"/>
+                        </li>
+
+                        <li>
+                            微信号：<input type="text" name="wxNo"/>
+                        </li>
+
+                        <li>
+                            邮箱：<input type="text" name="emailNo"/>
+                        </li>
+
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+            <a class="btn btn-warning" onclick="$.table.exportExcel()"
+               shiro:hasPermission="global:subscribeInfo:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('global:subscribeInfo:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('global:subscribeInfo:remove')}]];
+    var prefix = ctx + "global/subscribeInfo";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "预约",
+            search: false,
+            showExport: true,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: '',
+                    visible: false
+                },
+                {
+                    field: 'housesCode',
+                    title: '房屋编码',
+                    sortable: true
+                },
+                {
+                    field: 'name',
+                    title: '用户姓名',
+                    sortable: true
+                },
+                {
+                    field: 'sex',
+                    title: '用户性别',
+                    sortable: true
+                },
+                {
+                    field: 'phoneNo',
+                    title: '电话号码',
+                    sortable: true
+                },
+                {
+                    field: 'wxNo',
+                    title: '微信号',
+                    sortable: true
+                },
+                {
+                    field: 'emailNo',
+                    title: '邮箱',
+                    sortable: true
+                },
+                {
+                    field: 'note',
+                    title: '备注',
+                    sortable: true
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>

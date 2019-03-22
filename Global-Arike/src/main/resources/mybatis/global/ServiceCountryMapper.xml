@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.serviceCountry.mapper.ServiceCountryMapper">
+    
+    <resultMap type="ServiceCountry" id="ServiceCountryResult">
+        <result property="scopeOneNo"    column="scope_one_no"    />
+        <result property="scopeOneName"    column="scope_one_name"    />
+        <result property="scopeTwoIcon"    column="scope_two_icon"    />
+    </resultMap>
+	
+	<sql id="selectServiceCountryVo">
+        select scope_one_no, scope_one_name, scope_two_icon from global_service_country
+    </sql>
+	
+    <select id="selectServiceCountryList" parameterType="ServiceCountry" resultMap="ServiceCountryResult">
+        <include refid="selectServiceCountryVo"/>
+        <where>  
+            <if test="scopeOneNo != null  and scopeOneNo != '' "> and scope_one_no = #{scopeOneNo}</if>
+             <if test="scopeOneName != null  and scopeOneName != '' "> and scope_one_name = #{scopeOneName}</if>
+             <if test="scopeTwoIcon != null  and scopeTwoIcon != '' "> and scope_two_icon = #{scopeTwoIcon}</if>
+         </where>
+    </select>
+    
+    <select id="selectServiceCountryById" parameterType="String" resultMap="ServiceCountryResult">
+        <include refid="selectServiceCountryVo"/>
+        where scope_one_no = #{scopeOneNo}
+    </select>
+        
+    <insert id="insertServiceCountry" parameterType="ServiceCountry">
+        insert into global_service_country
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="scopeOneNo != null  and scopeOneNo != ''  ">scope_one_no,</if>
+			<if test="scopeOneName != null  and scopeOneName != ''  ">scope_one_name,</if>
+			<if test="scopeTwoIcon != null  and scopeTwoIcon != ''  ">scope_two_icon,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="scopeOneNo != null  and scopeOneNo != ''  ">#{scopeOneNo},</if>
+			<if test="scopeOneName != null  and scopeOneName != ''  ">#{scopeOneName},</if>
+			<if test="scopeTwoIcon != null  and scopeTwoIcon != ''  ">#{scopeTwoIcon},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateServiceCountry" parameterType="ServiceCountry">
+        update global_service_country
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="scopeOneName != null  and scopeOneName != ''  ">scope_one_name = #{scopeOneName},</if>
+            <if test="scopeTwoIcon != null  and scopeTwoIcon != ''  ">scope_two_icon = #{scopeTwoIcon},</if>
+        </trim>
+        where scope_one_no = #{scopeOneNo}
+    </update>
+
+	<delete id="deleteServiceCountryById" parameterType="String">
+        delete from global_service_country where scope_one_no = #{scopeOneNo}
+    </delete>
+	
+    <delete id="deleteServiceCountryByIds" parameterType="String">
+        delete from global_service_country where scope_one_no in 
+        <foreach item="scopeOneNo" collection="array" open="(" separator="," close=")">
+            #{scopeOneNo}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.drawingInfo.mapper.DrawingInfoMapper">
+    
+    <resultMap type="DrawingInfo" id="DrawingInfoResult">
+        <result property="id"    column="id"    />
+        <result property="housesCode"    column="houses_code"    />
+        <result property="housesDrawingUrl"    column="houses_drawing_url"    />
+        <result property="housesDrawingName"    column="houses_drawing_name"    />
+        <result property="housesArea"    column="houses_area"    />
+        <result property="housesBedroomNo"    column="houses_bedroom_no"    />
+        <result property="housesBathroomNo"    column="houses_bathroom_no"    />
+        <result property="housesUnitPrice"    column="houses_unit_price"    />
+    </resultMap>
+	
+	<sql id="selectDrawingInfoVo">
+        select id, houses_code, houses_drawing_url, houses_drawing_name, houses_area, houses_bedroom_no, houses_bathroom_no, houses_unit_price from global_drawing_info
+    </sql>
+	
+    <select id="selectDrawingInfoList" parameterType="DrawingInfo" resultMap="DrawingInfoResult">
+        <include refid="selectDrawingInfoVo"/>
+        <where>  
+            <if test="id != null  and id != '' "> and id = #{id}</if>
+             <if test="housesCode != null  and housesCode != '' "> and houses_code = #{housesCode}</if>
+             <if test="housesDrawingUrl != null  and housesDrawingUrl != '' "> and houses_drawing_url = #{housesDrawingUrl}</if>
+             <if test="housesDrawingName != null  and housesDrawingName != '' "> and houses_drawing_name = #{housesDrawingName}</if>
+             <if test="housesArea != null "> and houses_area = #{housesArea}</if>
+             <if test="housesBedroomNo != null "> and houses_bedroom_no = #{housesBedroomNo}</if>
+             <if test="housesBathroomNo != null "> and houses_bathroom_no = #{housesBathroomNo}</if>
+             <if test="housesUnitPrice != null "> and houses_unit_price = #{housesUnitPrice}</if>
+         </where>
+    </select>
+    
+    <select id="selectDrawingInfoById" parameterType="String" resultMap="DrawingInfoResult">
+        <include refid="selectDrawingInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDrawingInfo" parameterType="DrawingInfo">
+        insert into global_drawing_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null  and id != ''  ">id,</if>
+			<if test="housesCode != null  and housesCode != ''  ">houses_code,</if>
+			<if test="housesDrawingUrl != null  and housesDrawingUrl != ''  ">houses_drawing_url,</if>
+			<if test="housesDrawingName != null  and housesDrawingName != ''  ">houses_drawing_name,</if>
+			<if test="housesArea != null  ">houses_area,</if>
+			<if test="housesBedroomNo != null  ">houses_bedroom_no,</if>
+			<if test="housesBathroomNo != null  ">houses_bathroom_no,</if>
+			<if test="housesUnitPrice != null  ">houses_unit_price,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null  and id != ''  ">#{id},</if>
+			<if test="housesCode != null  and housesCode != ''  ">#{housesCode},</if>
+			<if test="housesDrawingUrl != null  and housesDrawingUrl != ''  ">#{housesDrawingUrl},</if>
+			<if test="housesDrawingName != null  and housesDrawingName != ''  ">#{housesDrawingName},</if>
+			<if test="housesArea != null  ">#{housesArea},</if>
+			<if test="housesBedroomNo != null  ">#{housesBedroomNo},</if>
+			<if test="housesBathroomNo != null  ">#{housesBathroomNo},</if>
+			<if test="housesUnitPrice != null  ">#{housesUnitPrice},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateDrawingInfo" parameterType="DrawingInfo">
+        update global_drawing_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="housesCode != null  and housesCode != ''  ">houses_code = #{housesCode},</if>
+            <if test="housesDrawingUrl != null  and housesDrawingUrl != ''  ">houses_drawing_url = #{housesDrawingUrl},</if>
+            <if test="housesDrawingName != null  and housesDrawingName != ''  ">houses_drawing_name = #{housesDrawingName},</if>
+            <if test="housesArea != null  ">houses_area = #{housesArea},</if>
+            <if test="housesBedroomNo != null  ">houses_bedroom_no = #{housesBedroomNo},</if>
+            <if test="housesBathroomNo != null  ">houses_bathroom_no = #{housesBathroomNo},</if>
+            <if test="housesUnitPrice != null  ">houses_unit_price = #{housesUnitPrice},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteDrawingInfoById" parameterType="String">
+        delete from global_drawing_info where id = #{id}
+    </delete>
+	
+    <delete id="deleteDrawingInfoByIds" parameterType="String">
+        delete from global_drawing_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-information-edit" th:object="${information}">
+        <div>
+            <h4><span th:text="*{informationTitle}"></span></h4>
+            <h5><span th:text="*{#dates.format(createTime, 'yyyy-MM-dd HH:mm')}"></span></h5>
+            <div id="list">
+
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+    var prefix = ctx + "global/information";
+    $("#form-information-edit").validate({
+        rules: {
+            xxxx: {
+                required: true,
+            },
+        }
+    });
+
+    function submitHandler() {
+        $.modal.close();
+    }
+</script>
+<script th:inline="javascript">
+    $(function () {
+        var message = [[${information.informationContent}]];
+        // 获取当前数据然后转换成json
+        var json = JSON.parse(message);
+        var html = '';
+        for (var i = 0; i < json.length; i++) {
+            html += '<div>';
+            if (json[i].img != "") {
+                html += ' <div style="text-align: center"><img src="' + json[i].img + '"></div>';
+            }
+            if (json[i].content != "") {
+                html += '<p>' + json[i].content + '</p>';
+            }
+            html += '</div>';
+        }
+        $("#list").append(html)
+    })
+</script>
+</body>
+</html>

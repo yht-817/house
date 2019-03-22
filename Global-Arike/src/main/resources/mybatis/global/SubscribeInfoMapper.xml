@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.subscribeInfo.mapper.SubscribeInfoMapper">
+    
+    <resultMap type="SubscribeInfo" id="SubscribeInfoResult">
+        <result property="id"    column="id"    />
+        <result property="housesCode"    column="houses_code"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="phoneNo"    column="phone_no"    />
+        <result property="wxNo"    column="wx_no"    />
+        <result property="emailNo"    column="email_no"    />
+        <result property="note"    column="note"    />
+    </resultMap>
+	
+	<sql id="selectSubscribeInfoVo">
+        select id, houses_code, name, sex, phone_no, wx_no, email_no, note from global_subscribe_info
+    </sql>
+	
+    <select id="selectSubscribeInfoList" parameterType="SubscribeInfo" resultMap="SubscribeInfoResult">
+        <include refid="selectSubscribeInfoVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="housesCode != null  and housesCode != '' "> and houses_code = #{housesCode}</if>
+             <if test="name != null  and name != '' "> and name = #{name}</if>
+             <if test="sex != null  and sex != '' "> and sex = #{sex}</if>
+             <if test="phoneNo != null  and phoneNo != '' "> and phone_no = #{phoneNo}</if>
+             <if test="wxNo != null  and wxNo != '' "> and wx_no = #{wxNo}</if>
+             <if test="emailNo != null  and emailNo != '' "> and email_no = #{emailNo}</if>
+             <if test="note != null  and note != '' "> and note = #{note}</if>
+         </where>
+    </select>
+    
+    <select id="selectSubscribeInfoById" parameterType="Integer" resultMap="SubscribeInfoResult">
+        <include refid="selectSubscribeInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSubscribeInfo" parameterType="SubscribeInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into global_subscribe_info
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="housesCode != null  and housesCode != ''  ">houses_code,</if>
+			<if test="name != null  and name != ''  ">name,</if>
+			<if test="sex != null  and sex != ''  ">sex,</if>
+			<if test="phoneNo != null  and phoneNo != ''  ">phone_no,</if>
+			<if test="wxNo != null  and wxNo != ''  ">wx_no,</if>
+			<if test="emailNo != null  and emailNo != ''  ">email_no,</if>
+			<if test="note != null  and note != ''  ">note,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="housesCode != null  and housesCode != ''  ">#{housesCode},</if>
+			<if test="name != null  and name != ''  ">#{name},</if>
+			<if test="sex != null  and sex != ''  ">#{sex},</if>
+			<if test="phoneNo != null  and phoneNo != ''  ">#{phoneNo},</if>
+			<if test="wxNo != null  and wxNo != ''  ">#{wxNo},</if>
+			<if test="emailNo != null  and emailNo != ''  ">#{emailNo},</if>
+			<if test="note != null  and note != ''  ">#{note},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateSubscribeInfo" parameterType="SubscribeInfo">
+        update global_subscribe_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="housesCode != null  and housesCode != ''  ">houses_code = #{housesCode},</if>
+            <if test="name != null  and name != ''  ">name = #{name},</if>
+            <if test="sex != null  and sex != ''  ">sex = #{sex},</if>
+            <if test="phoneNo != null  and phoneNo != ''  ">phone_no = #{phoneNo},</if>
+            <if test="wxNo != null  and wxNo != ''  ">wx_no = #{wxNo},</if>
+            <if test="emailNo != null  and emailNo != ''  ">email_no = #{emailNo},</if>
+            <if test="note != null  and note != ''  ">note = #{note},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteSubscribeInfoById" parameterType="Integer">
+        delete from global_subscribe_info where id = #{id}
+    </delete>
+	
+    <delete id="deleteSubscribeInfoByIds" parameterType="String">
+        delete from global_subscribe_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

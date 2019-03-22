@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.comments.mapper.CommentsMapper">
+    
+    <resultMap type="Comments" id="CommentsResult">
+        <result property="commentNo"    column="comment_no"    />
+        <result property="informationNo"    column="information_no"    />
+        <result property="userNo"    column="user_no"    />
+        <result property="content"    column="content"    />
+        <result property="commentTime"    column="comment_time"    />
+    </resultMap>
+	
+	<sql id="selectCommentsVo">
+        select comment_no, information_no, user_no, content, comment_time from global_comments
+    </sql>
+	
+    <select id="selectCommentsList" parameterType="Comments" resultMap="CommentsResult">
+        <include refid="selectCommentsVo"/>
+        <where>  
+            <if test="commentNo != null  and commentNo != '' "> and comment_no = #{commentNo}</if>
+             <if test="informationNo != null  and informationNo != '' "> and information_no = #{informationNo}</if>
+             <if test="userNo != null  and userNo != '' "> and user_no = #{userNo}</if>
+             <if test="content != null  and content != '' "> and content = #{content}</if>
+             <if test="commentTime != null "> and comment_time = #{commentTime}</if>
+         </where>
+    </select>
+    
+    <select id="selectCommentsById" parameterType="String" resultMap="CommentsResult">
+        <include refid="selectCommentsVo"/>
+        where comment_no = #{commentNo}
+    </select>
+        
+    <insert id="insertComments" parameterType="Comments">
+        insert into global_comments
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="commentNo != null  and commentNo != ''  ">comment_no,</if>
+			<if test="informationNo != null  and informationNo != ''  ">information_no,</if>
+			<if test="userNo != null  and userNo != ''  ">user_no,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="commentTime != null  ">comment_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="commentNo != null  and commentNo != ''  ">#{commentNo},</if>
+			<if test="informationNo != null  and informationNo != ''  ">#{informationNo},</if>
+			<if test="userNo != null  and userNo != ''  ">#{userNo},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="commentTime != null  ">#{commentTime},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateComments" parameterType="Comments">
+        update global_comments
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="informationNo != null  and informationNo != ''  ">information_no = #{informationNo},</if>
+            <if test="userNo != null  and userNo != ''  ">user_no = #{userNo},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="commentTime != null  ">comment_time = #{commentTime},</if>
+        </trim>
+        where comment_no = #{commentNo}
+    </update>
+
+	<delete id="deleteCommentsById" parameterType="String">
+        delete from global_comments where comment_no = #{commentNo}
+    </delete>
+	
+    <delete id="deleteCommentsByIds" parameterType="String">
+        delete from global_comments where comment_no in 
+        <foreach item="commentNo" collection="array" open="(" separator="," close=")">
+            #{commentNo}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-houseDevelopersInfo-edit" th:object="${houseDevelopersInfo}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开发商编码：</label>
+				<div class="col-sm-8">
+					<input id="houseDevelopersNo" name="houseDevelopersNo" th:field="*{houseDevelopersNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开发商名字：</label>
+				<div class="col-sm-8">
+					<input id="houseDevelopersName" name="houseDevelopersName" th:field="*{houseDevelopersName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">公司logo：</label>
+				<div class="col-sm-8">
+					<input id="houseDevelopersLogo" name="houseDevelopersLogo" th:field="*{houseDevelopersLogo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开发商介绍：</label>
+				<div class="col-sm-8">
+					<input id="houseDevelopersIntroduce" name="houseDevelopersIntroduce" th:field="*{houseDevelopersIntroduce}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "global/houseDevelopersInfo";
+		$("#form-houseDevelopersInfo-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-houseDevelopersInfo-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

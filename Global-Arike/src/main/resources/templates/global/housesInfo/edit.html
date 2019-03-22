@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-housesInfo-edit" th:object="${housesInfo}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">楼盘名字：</label>
+				<div class="col-sm-8">
+					<input id="housesName" name="housesName" th:field="*{housesName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">楼盘类型：</label>
+				<div class="col-sm-8">
+					<input id="housesGenre" name="housesGenre" th:field="*{housesGenre}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">楼盘价格：</label>
+				<div class="col-sm-8">
+					<input id="housesPrice" name="housesPrice" th:field="*{housesPrice}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">币种类型：</label>
+				<div class="col-sm-8">
+					<input id="housesPriceType" name="housesPriceType" th:field="*{housesPriceType}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">房屋建造时间：</label>
+				<div class="col-sm-8">
+					<input id="housesBuildDate" name="housesBuildDate" th:field="*{housesBuildDate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">房屋编码：</label>
+				<div class="col-sm-8">
+					<input id="housesCode" name="housesCode" th:field="*{housesCode}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">楼盘地址：</label>
+				<div class="col-sm-8">
+					<input id="housesAddress" name="housesAddress" th:field="*{housesAddress}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">房屋产权：</label>
+				<div class="col-sm-8">
+					<input id="housesEquity" name="housesEquity" th:field="*{housesEquity}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">交房时间：</label>
+				<div class="col-sm-8">
+					<input id="housesDelivery" name="housesDelivery" th:field="*{housesDelivery}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">房屋的封面图片：</label>
+				<div class="col-sm-8">
+					<input id="housesCoverImg" name="housesCoverImg" th:field="*{housesCoverImg}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">房源描述：</label>
+				<div class="col-sm-8">
+					<input id="housesDescribe" name="housesDescribe" th:field="*{housesDescribe}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">开发商编码：</label>
+				<div class="col-sm-8">
+					<input id="houseDevelopersNo" name="houseDevelopersNo" th:field="*{houseDevelopersNo}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "global/housesInfo";
+		$("#form-housesInfo-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-housesInfo-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

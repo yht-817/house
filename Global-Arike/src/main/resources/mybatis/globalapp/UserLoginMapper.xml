@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.globalapp.main.mapper.UserLoginMapper">
+    <resultMap type="UserAuths" id="UserAuthsInfo">
+        <result property="userNo" column="user_no"/>
+        <result property="thirdKey" column="third_key"/>
+        <result property="thirdType" column="third_type"/>
+        <result property="thirdDate" column="third_date"/>
+    </resultMap>
+
+    <sql id="findUser">
+        select user_no, third_key, third_type, third_date from global_user_auths
+    </sql>
+
+    <select id="findQueryUserInfo" parameterType="String" resultMap="UserAuthsInfo">
+        <include refid="findUser"/>
+        where third_key = #{thirdKey}
+    </select>
+</mapper>

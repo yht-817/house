@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.userAuths.mapper.UserAuthsMapper">
+    
+    <resultMap type="UserAuths" id="UserAuthsResult">
+        <result property="userNo"    column="user_no"    />
+        <result property="thirdKey"    column="third_key"    />
+        <result property="thirdType"    column="third_type"    />
+        <result property="thirdDate"    column="third_date"    />
+    </resultMap>
+	
+	<sql id="selectUserAuthsVo">
+        select user_no, third_key, third_type, third_date from global_user_auths
+    </sql>
+	
+    <select id="selectUserAuthsList" parameterType="UserAuths" resultMap="UserAuthsResult">
+        <include refid="selectUserAuthsVo"/>
+        <where>  
+            <if test="userNo != null  and userNo != '' "> and user_no = #{userNo}</if>
+             <if test="thirdKey != null  and thirdKey != '' "> and third_key = #{thirdKey}</if>
+             <if test="thirdType != null  and thirdType != '' "> and third_type = #{thirdType}</if>
+             <if test="thirdDate != null "> and third_date = #{thirdDate}</if>
+         </where>
+    </select>
+    
+    <select id="selectUserAuthsById" parameterType="String" resultMap="UserAuthsResult">
+        <include refid="selectUserAuthsVo"/>
+        where user_no = #{userNo}
+    </select>
+        
+    <insert id="insertUserAuths" parameterType="UserAuths">
+        insert into global_user_auths
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userNo != null  and userNo != ''  ">user_no,</if>
+			<if test="thirdKey != null  and thirdKey != ''  ">third_key,</if>
+			<if test="thirdType != null  and thirdType != ''  ">third_type,</if>
+			<if test="thirdDate != null  ">third_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userNo != null  and userNo != ''  ">#{userNo},</if>
+			<if test="thirdKey != null  and thirdKey != ''  ">#{thirdKey},</if>
+			<if test="thirdType != null  and thirdType != ''  ">#{thirdType},</if>
+			<if test="thirdDate != null  ">#{thirdDate},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateUserAuths" parameterType="UserAuths">
+        update global_user_auths
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="thirdKey != null  and thirdKey != ''  ">third_key = #{thirdKey},</if>
+            <if test="thirdType != null  and thirdType != ''  ">third_type = #{thirdType},</if>
+            <if test="thirdDate != null  ">third_date = #{thirdDate},</if>
+        </trim>
+        where user_no = #{userNo}
+    </update>
+
+	<delete id="deleteUserAuthsById" parameterType="String">
+        delete from global_user_auths where user_no = #{userNo}
+    </delete>
+	
+    <delete id="deleteUserAuthsByIds" parameterType="String">
+        delete from global_user_auths where user_no in 
+        <foreach item="userNo" collection="array" open="(" separator="," close=")">
+            #{userNo}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.global.housesType.mapper.HousesTypeMapper">
+    
+    <resultMap type="HousesType" id="HousesTypeResult">
+        <result property="id"    column="id"    />
+        <result property="typeNo"    column="type_no"    />
+        <result property="housingType"    column="housing_type"    />
+        <result property="housingTypeE"    column="housing_type_e"    />
+    </resultMap>
+	
+	<sql id="selectHousesTypeVo">
+        select id, type_no, housing_type, housing_type_e from global_houses_type
+    </sql>
+	
+    <select id="selectHousesTypeList" parameterType="HousesType" resultMap="HousesTypeResult">
+        <include refid="selectHousesTypeVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="typeNo != null "> and type_no = #{typeNo}</if>
+             <if test="housingType != null  and housingType != '' "> and housing_type = #{housingType}</if>
+             <if test="housingTypeE != null  and housingTypeE != '' "> and housing_type_e = #{housingTypeE}</if>
+         </where>
+    </select>
+    
+    <select id="selectHousesTypeById" parameterType="Integer" resultMap="HousesTypeResult">
+        <include refid="selectHousesTypeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHousesType" parameterType="HousesType" useGeneratedKeys="true" keyProperty="id">
+        insert into global_houses_type
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="typeNo != null  ">type_no,</if>
+			<if test="housingType != null  and housingType != ''  ">housing_type,</if>
+			<if test="housingTypeE != null  and housingTypeE != ''  ">housing_type_e,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="typeNo != null  ">#{typeNo},</if>
+			<if test="housingType != null  and housingType != ''  ">#{housingType},</if>
+			<if test="housingTypeE != null  and housingTypeE != ''  ">#{housingTypeE},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateHousesType" parameterType="HousesType">
+        update global_houses_type
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="typeNo != null  ">type_no = #{typeNo},</if>
+            <if test="housingType != null  and housingType != ''  ">housing_type = #{housingType},</if>
+            <if test="housingTypeE != null  and housingTypeE != ''  ">housing_type_e = #{housingTypeE},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteHousesTypeById" parameterType="Integer">
+        delete from global_houses_type where id = #{id}
+    </delete>
+	
+    <delete id="deleteHousesTypeByIds" parameterType="String">
+        delete from global_houses_type where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
