@@ -78,4 +78,9 @@ public interface HomeMapper {
     int deleteFocusPioneer(@Param("userNo") String userNo, @Param("focusUserNo") String focusUserNo);
 
     List<PioneerList> myFocusPioneer(@Param("userNo") String userNo);
+
+    List<InformationList> queryCollectionInformationList(@Param("pageSize") int pageSize, @Param("pageNo") int pageNo, @Param("userNo") String userNo);
+
+    @Select("SELECT concat(phone_code,phone_no) FROM global_user_info where user_no = #{userNo}")
+    String queryPhone(@Param("userNo") String userNo);
 }

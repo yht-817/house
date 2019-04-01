@@ -127,4 +127,12 @@
         SELECT a.user_no,a.phone_no,a.user_name,a.user_head,a.live,a.introduce FROM global_pioneer a,global_pioneer_focus b WHERE a.user_no = b.focus_user_no AND b.user_no = #{userNo}
     </select>
 
+
+    <!--查询我收藏的资讯-->
+    <select id="queryCollectionInformationList" parameterType="com.ruoyi.project.globalapp.main.domain.InformationList"
+            resultMap="InformationLists">
+          SELECT a.information_no,a.user_no,a.information_title,a.information_banner,a.discuss_number,a.give_number,a.create_time,c.nick_name,c.user_head
+            FROM global_collection b LEFT JOIN global_information a ON a.information_no = b.business_no LEFT JOIN  global_user_info c ON a.user_no = c.user_no
+            WHERE a.user_no = #{userNo} ORDER BY b.collection_time DESC LIMIT #{pageNo},#{pageSize}
+    </select>
 </mapper>

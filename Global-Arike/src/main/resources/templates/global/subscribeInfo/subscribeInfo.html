@@ -56,6 +56,7 @@
 <script th:inline="javascript">
     var editFlag = [[${@permission.hasPermi('global:subscribeInfo:edit')}]];
     var removeFlag = [[${@permission.hasPermi('global:subscribeInfo:remove')}]];
+    var datas = [[${@dict.getType('app_gender')}]];
     var prefix = ctx + "global/subscribeInfo";
 
     $(function () {
@@ -89,7 +90,10 @@
                 {
                     field: 'sex',
                     title: '用户性别',
-                    sortable: true
+                    sortable: true,
+                    formatter: function (value, row, index) {
+                        return $.table.selectDictLabel(datas, value);
+                    }
                 },
                 {
                     field: 'phoneNo',

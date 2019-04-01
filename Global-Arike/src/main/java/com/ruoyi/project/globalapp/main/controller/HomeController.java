@@ -88,7 +88,6 @@ public class HomeController extends BaseController {
     /**
      * 用户添加预约顾问
      */
-
     @PostMapping("/addSubscribeInfo")
     @ResponseBody
     @ApiResponses(value = {
@@ -98,13 +97,35 @@ public class HomeController extends BaseController {
     @ApiOperation(value = "用户添加预约顾问", httpMethod = "POST")
     public AjaxResult addSubscribeInfo(SubscribeInfos subscribeInfos) {
         // 先查询当前用户是否预约了当前房子的
-        //SubscribeInfos data = iHomeService.findSubscribeInfoInfo(subscribeInfos.getHousesCode(),subscribeInfos.getUserNo());
+        // SubscribeInfos data = iHomeService.findSubscribeInfoInfo(subscribeInfos.getHousesCode(),subscribeInfos.getUserNo());
         boolean add_success = iHomeService.addSubscribeInfo(subscribeInfos);
         if (add_success) {
             return success("操作成功", 200, add_success);
         }
         return error(500, "服务忙请稍后重试");
     }
+
+
+    /**
+     * 查询当前是否申请了预约顾问
+     */
+    @PostMapping("/whetherSubscribeInfo")
+    @ResponseBody
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "成功"),
+            @ApiResponse(code = 500, message = "失败"),
+    })
+    @ApiOperation(value = "查询当前是否申请了预约顾问", httpMethod = "POST")
+    public AjaxResult whetherSubscribeInfo(String housesCode, String userNo) {
+        // 先查询当前用户是否预约了当前房子的
+        SubscribeInfos data = iHomeService.findSubscribeInfoInfo(housesCode, userNo);
+        if (data != null) {
+            return success("操作成功", 200, true);
+        } else {
+            return success("操作成功", 200, false);
+        }
+    }
+
 
     /**
      * 获取电话号码号段
@@ -413,4 +434,24 @@ public class HomeController extends BaseController {
         return error(500, "服务正忙");
     }
 
+    /**
+     * 获取收藏的资讯
+     */
+    @PostMapping("/collectioninformationlist")
+    @ResponseBody
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "成功"),
+            @ApiResponse(code = 500, message = "失败"),
+    })
+    @ApiOperation(value = "获取收藏资讯列表展示", httpMethod = "POST")
+    public AjaxResult queryCollectionInformationList(int pageSize, int pageNo, String userNo) throws ParseException {
+        pageNo = pageNo * pageSize;
+        //分页获取当前资讯的数据（按照时间降序排列）
+        List<InformationList> data = iHomeService.queryCollectionInformationList(pageSize, pageNo, userNo);
+        // 把时间换算成几个小时以前
+        for (int i = 0; i < data.size(); i++) {
+            data.get(i).setCreateTime(RelativeDateFormat.format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(data.get(i).getCreateTime())));
+        }
+        return success("成功", 200, data);
+    }
 }

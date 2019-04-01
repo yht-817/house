@@ -57,6 +57,9 @@ public class HomeServiceImpl implements IHomeService {
     }
 
     public boolean addSubscribeInfo(SubscribeInfos subscribeInfos) {
+        // 查询电话号码
+        String phoneNo = homeMapper.queryPhone(subscribeInfos.getUserNo());
+        subscribeInfos.setPhoneNo("+" + phoneNo);
         int add = homeMapper.addSubscribeInfo(subscribeInfos);
         if (add > 0) {
             return true;
@@ -253,5 +256,17 @@ public class HomeServiceImpl implements IHomeService {
     public List<PioneerList> myFocusPioneer(String userNo) {
         List<PioneerList> data = homeMapper.myFocusPioneer(userNo);
         return data;
+    }
+
+    /**
+     * 查询我收藏的资讯
+     *
+     * @param pageSize
+     * @param pageNo
+     * @param userNo
+     * @return
+     */
+    public List<InformationList> queryCollectionInformationList(int pageSize, int pageNo, String userNo) {
+        return homeMapper.queryCollectionInformationList(pageSize, pageNo, userNo);
     }
 }

@@ -4,4 +4,20 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.project.globalapp.main.mapper.MainMapper">
 
+    <select id="queryTodayHouseInfo" resultType="map">
+         SELECT a.houses_code,a.houses_drawing_url,a.houses_bedroom_no,a.houses_bathroom_no,a.houses_unit_price,b.houses_name,b.houses_price_type,b.country,b.city,b.houses_address,b.create_time,c.housing_type_e,c.housing_type
+          FROM global_drawing_info a LEFT JOIN global_houses_info b  ON a.houses_code = b.houses_code LEFT JOIN global_houses_type c ON b.houses_genre = c.type_no ORDER BY b.create_time DESC LIMIT 5
+    </select>
+
+    <!--获取地产先锋的列表-->
+    <resultMap type="PioneerListMain" id="PioneerListMains">
+        <result property="userNo" column="user_no"/>
+        <result property="userName" column="user_name"/>
+        <result property="userHead" column="user_head"/>
+    </resultMap>
+    <select id="queryPioneerList" parameterType="com.ruoyi.project.globalapp.main.domain.PioneerListMain"
+            resultMap="PioneerListMains">
+           SELECT user_no,user_name,user_head FROM global_pioneer LIMIT 5
+    </select>
+
 </mapper>

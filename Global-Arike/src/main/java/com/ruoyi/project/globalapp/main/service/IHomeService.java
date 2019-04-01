@@ -51,4 +51,6 @@ public interface IHomeService {
     boolean deleteFocusPioneer(String userNo, String focusUserNo);
 
     List<PioneerList> myFocusPioneer(String userNo);
+
+    List<InformationList> queryCollectionInformationList(int pageSize, int pageNo, String userNo);
 }
